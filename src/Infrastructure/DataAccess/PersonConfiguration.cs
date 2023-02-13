@@ -9,4 +9,4 @@ namespace DataAccess
     internal class PersonConfiguration
     {
     }
-}
+}  
