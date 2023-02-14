@@ -18,7 +18,7 @@ namespace DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
+           modelBuilder.ApplyConfiguration(new PersonConfiguration());
         }
     }
 }

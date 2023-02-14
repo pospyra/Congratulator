@@ -12,10 +12,6 @@ namespace DataAccess
     /// </summary>
     public interface DbContextOptionsConfigurator<TContext> where TContext : DbContext
     {
-        /// <summary>
-        /// Выполняет конфигурацию контекста.
-        /// </summary>
-        /// <param name="opions">настройки</param>
         void Configure(DbContextOptionsBuilder<TContext> opions);
     }
 }
