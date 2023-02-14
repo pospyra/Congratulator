@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
+using DataAccess.Repository;
 
 namespace Registrar
 {
@@ -28,7 +29,7 @@ namespace Registrar
 
                 services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<CongratulatorContext>()));
 
-                //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+                services.AddScoped(typeof(IListBirthdayRepository), typeof(ListBirthdayRepository));
 
                 return services;
             }
