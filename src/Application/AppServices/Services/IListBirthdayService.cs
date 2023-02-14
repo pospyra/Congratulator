@@ -9,10 +9,11 @@ namespace AppServices.Services
 {
     public interface IListBirthdayService 
     {
-        Task<InfoPersonResponse> AddPerson(AddPersonRequest addPersonRequest);
+        Task<ICollection<InfoPersonResponse>> GetNearestBirthday();
+        Task<InfoPersonResponse> AddPerson(string name, DateTime dateBrth);
         Task DeletePerson(int id);
         Task<IReadOnlyCollection<InfoPersonResponse>> GetAllPerson();
 
-        Task<InfoPersonResponse> EditPerson(int id, EditPersonRequest editPersonRequest);
+        Task<InfoPersonResponse> EditPerson(int id, string name, DateTime dateBrth);
     }
 }

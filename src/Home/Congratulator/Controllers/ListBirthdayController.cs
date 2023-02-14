@@ -2,6 +2,8 @@ using AppServices.Services;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
+using System.Xml.Linq;
 
 namespace Congratulator.Controllers
 {
@@ -14,37 +16,84 @@ namespace Congratulator.Controllers
             _birthdayService = birthdayService;
         }
 
+
+        [HttpGet("nearestBirthday")]
+        [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetNearest()
+        {
+            try
+            {
+                var result = await _birthdayService.GetNearestBirthday();
+                return Ok(result);
+            }
+
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("getAll")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _birthdayService.GetAllPerson();
-            return Ok(result);
+            try
+            {
+                var result = await _birthdayService.GetAllPerson();
+                return Ok(result);
+            }
+
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("createAd")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateAdAsync(AddPersonRequest createPerson)
+        public async Task<IActionResult> CreateAsync(string name, DateTime dateBrth)
         {
-            var result = await _birthdayService.AddPerson(createPerson);
-            return Created("", result);
+            try
+            {
+                var result = await _birthdayService.AddPerson(name, dateBrth);
+                return Created("", result);
+            }
+            catch(Exception ex)
+            {
+               return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("update/{id}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditAddAsync(int id, EditPersonRequest edit)
+        public async Task<IActionResult> EditPerson(int id, string name, DateTime dateBrth)
         {
-            var res = await _birthdayService.EditPerson(id, edit);
-            return Ok(res);
-        }
+            try
+            {
+                var res = await _birthdayService.EditPerson(id, name, dateBrth);
+                return Ok(res);
+            }
 
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpDelete("delete/{id}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeletePerson(int id)
         {
-            await _birthdayService.DeletePerson(id);
-            return NoContent();
+            try
+            {
+                await _birthdayService.DeletePerson(id);
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

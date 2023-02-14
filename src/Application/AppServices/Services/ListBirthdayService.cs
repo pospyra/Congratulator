@@ -18,12 +18,12 @@ namespace AppServices.Services
         {
             _listBirthdayRepository= listBirthdayRepository;
         }
-        public async Task<InfoPersonResponse> AddPerson(AddPersonRequest addPersonRequest)
+        public async Task<InfoPersonResponse> AddPerson(string name, DateTime dateBrth)
         {
             var newPerson = new Person
             {
-                Name = addPersonRequest.Name,
-                DateBirthDay = addPersonRequest.DateBirthday
+                Name = name,
+                DateBirthDay = dateBrth.ToUniversalTime()
             };
             await _listBirthdayRepository.AddAsync(newPerson);
 
@@ -41,20 +41,19 @@ namespace AppServices.Services
           await _listBirthdayRepository.DeleteAsync(delPerson);   
         }
 
-        public async Task<InfoPersonResponse> EditPerson(int id,EditPersonRequest editPersonRequest)
+        public async Task<InfoPersonResponse> EditPerson(int id, string name, DateTime dateBrth)
         {
             var existingUser = await _listBirthdayRepository.GetByIdAsync(id);
-
-            existingUser.Name = editPersonRequest.Name;
-            existingUser.DateBirthDay = editPersonRequest.DateBirthday;
+           existingUser.Name = name;
+           existingUser.DateBirthDay = dateBrth.ToUniversalTime();
 
             await _listBirthdayRepository.UpdateAsync(existingUser);
 
             return new InfoPersonResponse()
             {
                 Id = id,
-                Name = editPersonRequest.Name,
-                DateBirthday = editPersonRequest.DateBirthday
+                Name = name,
+                DateBirthday = dateBrth
             };
         }
 
@@ -67,6 +66,18 @@ namespace AppServices.Services
                     Name = x.Name,
                    DateBirthday = x.DateBirthDay
                 }).ToListAsync();
+        }
+
+        public async Task<ICollection<InfoPersonResponse>> GetNearestBirthday()
+        {
+            var birtdays = _listBirthdayRepository.GetAll().Where(x=>x.DateBirthDay.Month == DateTime.UtcNow.Month
+            || x.DateBirthDay.Month == DateTime.UtcNow.Month+1);
+            return await birtdays.Select(x=> new InfoPersonResponse()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                DateBirthday = x.DateBirthDay
+            }).OrderBy(x=>x.DateBirthday).ToListAsync();
         }
     }
 }
