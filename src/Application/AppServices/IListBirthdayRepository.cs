@@ -10,14 +10,14 @@ namespace DataAccess.Repository
 {
     public interface IListBirthdayRepository
     {
-        IQueryable<Person> GetAll();
+        public IQueryable<Person> GetAll();
 
-        Task<Person> GetByIdAsync(int Id);
+        public Task<Person> GetByIdAsync(int Id);
 
-        Task AddAsync(Person model);
+        public Task AddAsync(Person model);
 
-        Task UpdateAsync(Person model);
+        public Task UpdateAsync(Person model);
 
-        Task DeleteAsync(Person model);
+        public Task DeleteAsync(Person model);
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Repository;
+using AppServices.Services;
 
 namespace Registrar
 {
@@ -30,6 +31,9 @@ namespace Registrar
                 services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<CongratulatorContext>()));
 
                 services.AddScoped(typeof(IListBirthdayRepository), typeof(ListBirthdayRepository));
+
+                services.AddTransient<IListBirthdayService, ListBirthdayService>();
+                services.AddTransient<IListBirthdayRepository, ListBirthdayRepository>();
 
                 return services;
             }
