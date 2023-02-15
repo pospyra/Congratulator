@@ -51,26 +51,41 @@ namespace Congratulator.Controllers
 
         [HttpPost("createAd")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.Created)]
-        public async Task<IActionResult> CreateAsync(string name, DateTime dateBrth)
+        public async Task<IActionResult> CreateAsync(string name, DateTime dateBrth, IFormFile file)
         {
-            try
-            {
-                var result = await _birthdayService.AddPerson(name, dateBrth);
-                return Created("", result);
-            }
-            catch(Exception ex)
-            {
-               return BadRequest(ex.Message);
-            }
+            byte[] photo;
+                try
+                {
+                await using (var ms = new MemoryStream())
+                await using (var fs = file.OpenReadStream())
+                {
+                    await fs.CopyToAsync(ms);
+                     photo = ms.ToArray();
+                }
+                var result = await _birthdayService.AddPerson(name, dateBrth, photo);
+                    return Created("", result);
+                }
+
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
         }
 
         [HttpPut("update/{id}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> EditPerson(int id, string name, DateTime dateBrth)
+        public async Task<IActionResult> EditPerson(int id, string name, DateTime dateBrth, IFormFile file)
         {
+            byte[] photo;
             try
             {
-                var res = await _birthdayService.EditPerson(id, name, dateBrth);
+                await using (var ms = new MemoryStream())
+                await using (var fs = file.OpenReadStream())
+                {
+                    await fs.CopyToAsync(ms);
+                    photo = ms.ToArray();
+                }
+                var res = await _birthdayService.EditPerson(id, name, dateBrth, photo);
                 return Ok(res);
             }
 

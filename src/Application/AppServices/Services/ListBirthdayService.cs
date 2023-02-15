@@ -18,12 +18,13 @@ namespace AppServices.Services
         {
             _listBirthdayRepository= listBirthdayRepository;
         }
-        public async Task<InfoPersonResponse> AddPerson(string name, DateTime dateBrth)
+        public async Task<InfoPersonResponse> AddPerson(string name, DateTime dateBrth, byte[] photo)
         {
             var newPerson = new Person
             {
                 Name = name,
-                DateBirthDay = dateBrth.ToUniversalTime()
+                DateBirthDay = dateBrth.ToUniversalTime(),
+                KodBase64 = Convert.ToBase64String(photo, 0 , photo.Length)
             };
             await _listBirthdayRepository.AddAsync(newPerson);
 
@@ -31,7 +32,8 @@ namespace AppServices.Services
             {
                 Id = newPerson.Id,
                 Name = newPerson.Name,
-                DateBirthday = newPerson.DateBirthDay
+                DateBirthday = newPerson.DateBirthDay,
+                KodBase64 = newPerson.KodBase64
             };
         }
 
@@ -41,11 +43,12 @@ namespace AppServices.Services
           await _listBirthdayRepository.DeleteAsync(delPerson);   
         }
 
-        public async Task<InfoPersonResponse> EditPerson(int id, string name, DateTime dateBrth)
+        public async Task<InfoPersonResponse> EditPerson(int id, string name, DateTime dateBrth, byte[] photo)
         {
-            var existingUser = await _listBirthdayRepository.GetByIdAsync(id);
+           var existingUser = await _listBirthdayRepository.GetByIdAsync(id);
            existingUser.Name = name;
            existingUser.DateBirthDay = dateBrth.ToUniversalTime();
+           existingUser.KodBase64 = Convert.ToBase64String(photo, 0, photo.Length);
 
             await _listBirthdayRepository.UpdateAsync(existingUser);
 
@@ -53,8 +56,9 @@ namespace AppServices.Services
             {
                 Id = id,
                 Name = name,
-                DateBirthday = dateBrth
-            };
+                DateBirthday = dateBrth,
+                KodBase64 = Convert.ToBase64String(photo, 0, photo.Length)
+        };
         }
 
         public async Task<IReadOnlyCollection<InfoPersonResponse>> GetAllPerson()
@@ -64,7 +68,8 @@ namespace AppServices.Services
                 {
                     Id = x.Id,
                     Name = x.Name,
-                   DateBirthday = x.DateBirthDay
+                   DateBirthday = x.DateBirthDay,
+                   KodBase64= x.KodBase64
                 }).ToListAsync();
         }
 
@@ -76,7 +81,8 @@ namespace AppServices.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                DateBirthday = x.DateBirthDay
+                DateBirthday = x.DateBirthDay,
+                KodBase64= x.KodBase64
             }).OrderBy(x=>x.DateBirthday).ToListAsync();
         }
     }
