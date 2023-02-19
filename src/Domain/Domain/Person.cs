@@ -11,7 +11,6 @@ namespace Domain
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime DateBirthDay { get; set; }
-
         public string? KodBase64 { get; set; }
     }
 }

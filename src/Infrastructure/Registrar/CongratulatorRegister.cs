@@ -22,6 +22,8 @@ namespace Registrar
         {
             public static IServiceCollection AddServices(this IServiceCollection services)
             {
+                services.AddCors();
+
                 services.AddSingleton<DbContextOptionsConfigurator<CongratulatorContext>, DbContextOptionsConfiguration>();
 
                 services.AddDbContext<CongratulatorContext>((Action<IServiceProvider, DbContextOptionsBuilder>)

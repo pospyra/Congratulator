@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AppServices.Services
 {
@@ -20,6 +21,11 @@ namespace AppServices.Services
         }
         public async Task<InfoPersonResponse> AddPerson(string name, DateTime dateBrth, byte[] photo)
         {
+            if (photo.Length > 5242880)
+            {
+                throw new Exception("Слишклм большой размер");
+            }
+
             var newPerson = new Person
             {
                 Name = name,
@@ -45,10 +51,11 @@ namespace AppServices.Services
 
         public async Task<InfoPersonResponse> EditPerson(int id, string name, DateTime dateBrth, byte[] photo)
         {
-           var existingUser = await _listBirthdayRepository.GetByIdAsync(id);
-           existingUser.Name = name;
-           existingUser.DateBirthDay = dateBrth.ToUniversalTime();
-           existingUser.KodBase64 = Convert.ToBase64String(photo, 0, photo.Length);
+            var existingUser = await _listBirthdayRepository.GetByIdAsync(id);
+
+            existingUser.Name = name;
+            existingUser.DateBirthDay = dateBrth.ToUniversalTime();
+            existingUser.KodBase64 = Convert.ToBase64String(photo, 0, photo.Length);
 
             await _listBirthdayRepository.UpdateAsync(existingUser);
 
@@ -58,7 +65,7 @@ namespace AppServices.Services
                 Name = name,
                 DateBirthday = dateBrth,
                 KodBase64 = Convert.ToBase64String(photo, 0, photo.Length)
-        };
+            };
         }
 
         public async Task<IReadOnlyCollection<InfoPersonResponse>> GetAllPerson()
@@ -66,16 +73,16 @@ namespace AppServices.Services
             return await _listBirthdayRepository.GetAll()
                 .Select(x => new InfoPersonResponse
                 {
-                    Id = x.Id,
-                    Name = x.Name,
+                   Id = x.Id,
+                   Name = x.Name,
                    DateBirthday = x.DateBirthDay,
                    KodBase64= x.KodBase64
-                }).ToListAsync();
+                }).OrderBy(x=>x.DateBirthday).ToListAsync();
         }
 
         public async Task<ICollection<InfoPersonResponse>> GetNearestBirthday()
         {
-            var birtdays = _listBirthdayRepository.GetAll().Where(x=>x.DateBirthDay.Month == DateTime.UtcNow.Month
+            var birtdays = _listBirthdayRepository.GetAll().Where(x=>x.DateBirthDay.Month == DateTime.UtcNow.Month && x.DateBirthDay.Day >= DateTime.UtcNow.Day
             || x.DateBirthDay.Month == DateTime.UtcNow.Month+1);
             return await birtdays.Select(x=> new InfoPersonResponse()
             {
