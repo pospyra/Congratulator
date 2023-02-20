@@ -77,7 +77,7 @@ namespace AppServices.Services
                    Name = x.Name,
                    DateBirthday = x.DateBirthDay,
                    KodBase64= x.KodBase64
-                }).OrderBy(x=>x.DateBirthday).ToListAsync();
+                }).OrderBy(x=>x.DateBirthday.Day).ToListAsync();
         }
 
         public async Task<ICollection<InfoPersonResponse>> GetNearestBirthday()
@@ -90,7 +90,7 @@ namespace AppServices.Services
                 Name = x.Name,
                 DateBirthday = x.DateBirthDay,
                 KodBase64= x.KodBase64
-            }).OrderBy(x=>x.DateBirthday).ToListAsync();
+            }).OrderBy(x=>x.DateBirthday.Month).ToListAsync();
         }
     }
 }
