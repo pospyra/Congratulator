@@ -2,15 +2,14 @@ using AppServices.Services;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Reflection.Metadata.Ecma335;
-using System.Xml.Linq;
 
 namespace Congratulator.Controllers
 {
+    [Route("[controller]")]
     [ApiController]
     public class ListBirthdayController : ControllerBase
     {
-       private readonly IListBirthdayService _birthdayService;
+        private readonly IListBirthdayService _birthdayService;
         public ListBirthdayController(IListBirthdayService birthdayService)
         {
             _birthdayService = birthdayService;
@@ -21,35 +20,21 @@ namespace Congratulator.Controllers
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetNearest()
         {
-            try
-            {
-                var result = await _birthdayService.GetNearestBirthday();
-                return Ok(result);
-            }
 
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _birthdayService.GetNearestBirthday();
+            return Ok(result);
+
         }
 
-        [HttpGet("getAll")]
+        [HttpGet]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAll()
         {
-            try
-            {
-                var result = await _birthdayService.GetAllPerson();
-                return Ok(result);
-            }
-
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _birthdayService.GetAllPerson();
+            return Ok(result);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.Created)]
         public async Task<IActionResult> CreateAsync(string name, DateTime dateBrth, IFormFile file)
         {
@@ -68,12 +53,12 @@ namespace Congratulator.Controllers
 
             catch (Exception ex)
             {
-                return BadRequest(ex.Message); 
+                return BadRequest(ex.Message);
             }
         }
 
 
-    [HttpPut("update/{id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> EditPerson(int id, string name, DateTime dateBrth, IFormFile file)
         {
@@ -90,26 +75,18 @@ namespace Congratulator.Controllers
                 return Ok(res);
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(typeof(IReadOnlyCollection<InfoPersonResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> DeletePerson(int id)
         {
-            try
-            {
-                await _birthdayService.DeletePerson(id);
-                return NoContent();
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            await _birthdayService.DeletePerson(id);
+            return NoContent();
         }
     }
 }

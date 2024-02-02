@@ -2,12 +2,6 @@
 using DataAccess.Repository;
 using Domain;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace AppServices.Services
 {
@@ -23,7 +17,7 @@ namespace AppServices.Services
         {
             if (photo.Length > 5242880)
             {
-                throw new Exception("Слишклм большой размер");
+                throw new Exception("Слишком большой размер");
             }
 
             var newPerson = new Person

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Contracts
+﻿namespace Contracts
 {
     public class InfoPersonResponse
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public DateTime DateBirthday { get; set; }
         public string? KodBase64 { get; set; }
     }
